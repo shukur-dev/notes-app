@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://notes_user:notes_password@db:5432/notes_db?schema=public
+      JWT_SECRET: strong-secret-for-notes-app # Обязательно измените это на реальный секретный ключ
+      # Дополнительные переменные окружения, если потребуются
+    volumes:
+      # Для разработки: монтируем код, чтобы изменения сразу отражались
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # Чтобы избежать перезаписи node_modules хостом
+    # Для разработки: перезапускать контейнер при изменениях файлов
+    # command: npm run start:dev # Используйте для разработки
+    command: npm run start:prod # Используйте для продакшн
+    restart: always
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: notes_user
+      POSTGRES_PASSWORD: notes_password
+      POSTGRES_DB: notes_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
