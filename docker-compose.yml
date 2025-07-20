@@ -9,15 +9,10 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://notes_user:notes_password@db:5432/notes_db?schema=public
-      JWT_SECRET: strong-secret-for-notes-app # Обязательно измените это на реальный секретный ключ
-      # Дополнительные переменные окружения, если потребуются
+      JWT_SECRET: strong-secret-for-notes-app
     volumes:
-      # Для разработки: монтируем код, чтобы изменения сразу отражались
       - .:/usr/src/app
-      - /usr/src/app/node_modules # Чтобы избежать перезаписи node_modules хостом
-    # Для разработки: перезапускать контейнер при изменениях файлов
-    # command: npm run start:dev # Используйте для разработки
-    command: npm run start:prod # Используйте для продакшн
+      - /usr/src/app/node_modules
     restart: always
 
   db:
